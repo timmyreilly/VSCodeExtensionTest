@@ -10,6 +10,9 @@ import * as assert from 'assert';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as myExtension from '../src/extension';
+import cp = require('child_process');
+
+var path = require("path");
 
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", () => {
@@ -29,6 +32,28 @@ suite("Extension Tests", () => {
 			Error
 		)
 	});
+	
+	// Working on these test -> 
+	
+	// test("Play Available", () => {
+	// 	let properPath = '/^(.*?)\.exe'
+	// 	let currentPlayPath = path.join(__dirname, '..', '..', 'audio', 'play.exe');
+	// 	console.log(path.join(__dirname, '..', '..', 'audio', 'play.exe'));
+	// 	console.log(properPath)
+	// 	assert.equal(properPath, currentPlayPath)
+	// })
+	
+	// test('Play exists', () => {
+	// 	let playPath = path.join(__dirname, '..', '..', 'audio', 'play.exe');
+	// 	let end = playPath.split(playPath, '\\');
+	// 	console.log(end);
+	// 	assert.equal('audio', playPath )
+	// })
+	// 
+	// test('Play no error', () => {
+	// 	let playPath = path.join(__dirname, '..', '..', 'audio', 'playz.exe');
+	// 	cp.execFile(playPath);
+	// })
 	
 	
 });
