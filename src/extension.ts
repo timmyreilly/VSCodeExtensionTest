@@ -1,7 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {window, workspace, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument} from 'vscode';
+import cp = require('child_process');
+
 var path = require("path");
+//var player = require('play-sound')(opts = {})
 
 // this method is called when your extension is activated. activation is
 // controlled by the activation events defined in package.json
@@ -15,13 +18,41 @@ export function activate(ctx: ExtensionContext) {
     //let wordCounter = new WordCounter();
     //let controller = new WordCounterController(wordCounter);
     
+    //
+    // process.platform === 'win32'
+    var currentpath = process.cwd()
+    var keypress_path = currentpath + '\\audio\\typewriter-key-1.wav'
+    // keypress_path: 'C:\\Users\\tireilly\\OneDrive\\d\\JavaScript\\ExtensionsVSCode\\tester\\audio\\typewriter-key-1.wav'
+   
+    //cp.execSync('powershell -c (New-Object Media.SoundPlayer "c:\PathTo\YourSound.wav").PlaySync();');
+    //cp.execSync('powershell -c (New-Object Media.SoundPlayer ' + keypress_path + ').PlaySync();');
+    
     let letterCounter = new AllTheThings();
-    let controller = new LetterCountController(letterCounter);
+    let audioPlayer = new AudioPlay();
+    let controller = new LetterCountController(letterCounter, audioPlayer);
 
     // add to a list of disposables which are disposed when this extension
     // is deactivated again.
     ctx.subscriptions.push(controller);
     ctx.subscriptions.push(letterCounter);
+    
+    
+}
+
+class AudioPlay {
+    public play(){
+        var currentpath = process.cwd()
+        console.log(currentpath);
+        var keypress_path = path.join(__dirname, '..', '..', 'audio', 'typewriter-key-1.wav');
+        console.log(keypress_path);
+        // keypress_path: 'C:\\Users\\tireilly\\OneDrive\\d\\JavaScript\\ExtensionsVSCode\\tester\\audio\\typewriter-key-1.wav'
+        
+        //cp.exec(`powershell -c (New-Object Media.SoundPlayer "${keypress_path}").PlaySync();`);
+        
+        let playExe =  path.join(__dirname, '..', '..', 'audio', 'play.exe');
+        cp.execFile(playExe, [keypress_path]);
+        //cp.execSync('powershell -c (New-Object Media.SoundPlayer ' + keypress_path + ').PlaySync();');
+    }
 }
 
 export class AllTheThings {
@@ -51,6 +82,7 @@ export class AllTheThings {
         let docContent = doc.getText();
         let letterCount = 0;
         letterCount = docContent.split("").length;
+        
         return letterCount;
     }
     
@@ -62,9 +94,11 @@ export class AllTheThings {
 class LetterCountController {
     private _letterCounter: AllTheThings;
     private _disposable: Disposable;
+    private _audioplayer: AudioPlay;
     
-    constructor(letterCounter: AllTheThings){
-        this._letterCounter = letterCounter
+    constructor(letterCounter: AllTheThings, audioplayer: AudioPlay){
+        this._letterCounter = letterCounter;
+        this._audioplayer = audioplayer;
         this._letterCounter.updateEverything();
         
         // subscribe to selection change and editor activation events...
@@ -77,6 +111,7 @@ class LetterCountController {
     
     private _onEvent() {
         this._letterCounter.updateEverything();
+        this._audioplayer.play();
     }
     
     private dispose() {
@@ -165,3 +200,15 @@ class WordCounterController {
         this._disposable.dispose();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+ 
