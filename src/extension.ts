@@ -27,7 +27,7 @@ export function activate(ctx: ExtensionContext) {
     //cp.execSync('powershell -c (New-Object Media.SoundPlayer "c:\PathTo\YourSound.wav").PlaySync();');
     //cp.execSync('powershell -c (New-Object Media.SoundPlayer ' + keypress_path + ').PlaySync();');
     
-    let letterCounter = new AllTheThings();
+    let letterCounter = new CharCount();
     let audioPlayer = new AudioPlay();
     let controller = new LetterCountController(letterCounter, audioPlayer);
 
@@ -40,22 +40,34 @@ export function activate(ctx: ExtensionContext) {
 }
 
 class AudioPlay {
-    public play(){
-        var currentpath = process.cwd()
-        console.log(currentpath);
-        var keypress_path = path.join(__dirname, '..', '..', 'audio', 'typewriter-key-1.wav');
-        console.log(keypress_path);
-        // keypress_path: 'C:\\Users\\tireilly\\OneDrive\\d\\JavaScript\\ExtensionsVSCode\\tester\\audio\\typewriter-key-1.wav'
+    public playKeystroke(){
         
+        //var currentpath = process.cwd()
+        //console.log(currentpath);
+        var keypress_path = path.join(__dirname, '..', '..', 'audio', 'typewriter-key-1.wav');
+        
+        //console.log(keypress_path);
+        // keypress_path: 'C:\\Users\\tireilly\\OneDrive\\d\\JavaScript\\ExtensionsVSCode\\tester\\audio\\typewriter-key-1.wav'        
         //cp.exec(`powershell -c (New-Object Media.SoundPlayer "${keypress_path}").PlaySync();`);
         
         let playExe =  path.join(__dirname, '..', '..', 'audio', 'play.exe');
         cp.execFile(playExe, [keypress_path]);
         //cp.execSync('powershell -c (New-Object Media.SoundPlayer ' + keypress_path + ').PlaySync();');
     }
+    
+    public playCarriageReturn(){
+        var carriagereturn_path = path.join(__dirname, '..','..','audio','typewriter-return-1.wav');
+        
+        let playExe = path.join(__dirname, '..','..','audio','play.exe');
+        cp.execFile(playExe, [carriagereturn_path]);
+    }
 }
 
-export class AllTheThings {
+export class LineCount {
+    
+}
+
+export class CharCount {
     private _statusBarItem: StatusBarItem;
     
     public updateEverything(){
@@ -92,11 +104,11 @@ export class AllTheThings {
 }
 
 class LetterCountController {
-    private _letterCounter: AllTheThings;
+    private _letterCounter: CharCount;
     private _disposable: Disposable;
     private _audioplayer: AudioPlay;
     
-    constructor(letterCounter: AllTheThings, audioplayer: AudioPlay){
+    constructor(letterCounter: CharCount, audioplayer: AudioPlay){
         this._letterCounter = letterCounter;
         this._audioplayer = audioplayer;
         this._letterCounter.updateEverything();
@@ -111,7 +123,7 @@ class LetterCountController {
     
     private _onEvent() {
         this._letterCounter.updateEverything();
-        this._audioplayer.play();
+        this._audioplayer.playKeystroke();
     }
     
     private dispose() {
