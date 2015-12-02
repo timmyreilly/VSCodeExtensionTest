@@ -2,4 +2,5 @@
 
 Learning about Visual Studio Code Extensions and trying to support a whimsical typewriter experience!
 
+With travis!
 ## Enjoy!
